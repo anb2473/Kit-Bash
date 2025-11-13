@@ -1,7 +1,10 @@
 from .object import *
 from .text import *
+from .rectangle import *
 
 __all__ = [
     "Object",
-    "Text"
+    "Text",
+    "Rectangle",
+    "hide_cursor"
 ]

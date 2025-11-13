@@ -10,8 +10,11 @@ class Canvas(WinValidator):
         super().__init__()
         self.validate()
         self.root = root
-        
+        hide_cursor()
+        clear_terminal()
+
     def render(self):
+        print('\033[4A\033[2K', end='')
         for obj in self.root.scene:
             obj.render()
         sys.stdout.flush()
@@ -19,5 +22,7 @@ class Canvas(WinValidator):
 if __name__ == "__main__":
     root = Root()
     canvas = Canvas(root)
+    root.add(Rectangle(8, 8, 15, 15, BLUE, texture=RECTANGLE_DOUBLE))
     root.add(Text(10, 10, "hello world", BLUE, BACKGROUND_RED, BOLD, ITALIC))
-    canvas.render()
+    while True:
+        canvas.render()
