@@ -38,3 +38,7 @@ The render function finishes 3 tasks
 3. Render the widget tree
     a. For each object create a buffer of the dimensions the object should occupy, and render the object in those dimensions
     b. Once the object is rendered, render each child and insert the child buffers into the parent buffer
+
+### Widgets
+
+1. Each widget will have a render function which returns itself rendered into a given buffer with styling
