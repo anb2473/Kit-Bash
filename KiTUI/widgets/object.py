@@ -1,9 +1,9 @@
 class Object:
     def __init__(self, bindings=[], *children, **modifiers):
         self.children, self.modifiers = children, modifiers
-        self.bindings = list(map(bindings, self.parse_binding))
+        self.bindings = [self.parse_binding(b) for b in bindings]
 
-    def parse_binding(key: str):
+    def parse_binding(self, key: str):
         key = key.lower()
         if key.startswith("ctrl+"):
             char = key[-1]
@@ -17,3 +17,9 @@ class Object:
         else:
             # assume a single character
             return ord(key)
+        
+    def on_focus(self, key):
+        pass
+
+    def render(self):
+        pass

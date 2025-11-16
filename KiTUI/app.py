@@ -1,4 +1,5 @@
 import curses
+import time
 
 class App():
     def __init__(self, stdscr):
@@ -12,24 +13,48 @@ class App():
         self.stdscr.nodelay(True)      # non-blocking input
         self.stdscr.keypad(True)       # capture arrow keys
 
-    def collect_bindings(self):
-        for child in self.root.children:
-            self.bindings.update({binding: child for binding in child.bindings})
+    def collect_bindings(self, root):
+        for child in getattr(root, 'children', []):
+            self.bindings.update({binding: child for binding in getattr(child, 'bindings', [])})
             self.collect_bindings(child)
 
     def run(self):
         while True:
-            # clear terminal
-            self.stdscr.clear()
+            # Create a virtual window
+            height, width = self.stdscr.getmaxyx()
+            win = curses.newwin(height, width, 0, 0)
+
+            # Clear virtual window
+            win.erase()
 
             # handle focused obj state
-            key = self.stdscr.get_wch()
-
-            # pipe IO to focused obj
+            try:
+                key = self.stdscr.get_wch()
+            except curses.error:
+                key = None
             
+            if key in self.bindings:
+                self.focused_obj = self.bindings.get(key)
+            elif self.focused_obj is not None: # pipe IO to focused obj
+                self.focused_obj.on_focus(key)
+
             # render
-            self.stdscr.refresh()
+            buffer = self.root.render(width, height)
+            lines = buffer.splitlines()
+
+            for y, line in enumerate(lines):
+                try:
+                    win.addstr(y, 0, line)
+                except curses.error:
+                    pass  # line too long for terminal
+
+            # Push virtual window to screen without refreshing immediately
+            win.noutrefresh()
+
+            # Update the screen all at once
+            curses.doupdate()
 
     def start(self):
         self.root = self.compose()
+        self.collect_bindings(self.root)
         
