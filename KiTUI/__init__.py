@@ -4,5 +4,6 @@ from .widgets import *
 __all__ = [
     "App",
     "Object",
-    "VBox"
+    "VBox",
+    "Label"
 ]
