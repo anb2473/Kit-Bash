@@ -17,7 +17,19 @@ class Object:
         else:
             # assume a single character
             return ord(key)
-        
+    
+    def get_modifier(self, name, default=True):
+        if name in self.modifiers:
+            return self.modifiers[name]
+        else:
+            return default
+    
+    def read_texture(self, texture, kind):
+        try:
+            return texture[kind]
+        except IndexError:
+            return ""
+
     def on_focus(self, key):
         pass
 

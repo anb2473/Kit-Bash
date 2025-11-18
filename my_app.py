@@ -7,7 +7,7 @@ class MyApp(App):
 
     def compose(self):
         return VBox(
-           
+		border_style="solid"           
         )
 
 def main(stdscr):
@@ -16,4 +16,8 @@ def main(stdscr):
     app.run()
 
 if __name__ == "__main__":
-    curses.wrapper(main)
+    try:
+        curses.wrapper(main)
+    except KeyboardInterrupt:
+        # Silently exit on keyboard interrupt
+        pass

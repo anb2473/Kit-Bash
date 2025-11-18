@@ -19,13 +19,17 @@ class App():
             self.collect_bindings(child)
 
     def run(self):
+        # Create a virtual window
+        original_height, original_width = self.stdscr.getmaxyx()
+        vwin = curses.newwin(original_height, original_width, 0, 0)
         while True:
-            # Create a virtual window
+            # Check for change in window dimensions, and update vwin
             height, width = self.stdscr.getmaxyx()
-            win = curses.newwin(height, width, 0, 0)
+            if (height != original_height or width != original_width):
+                vwin.resize(height, width)
 
             # Clear virtual window
-            win.erase()
+            vwin.erase()
 
             # handle focused obj state
             try:
@@ -44,12 +48,12 @@ class App():
 
             for y, line in enumerate(lines):
                 try:
-                    win.addstr(y, 0, line)
+                    vwin.addstr(y, 0, line)
                 except curses.error:
                     pass  # line too long for terminal
 
             # Push virtual window to screen without refreshing immediately
-            win.noutrefresh()
+            vwin.noutrefresh()
 
             # Update the screen all at once
             curses.doupdate()
