@@ -1,5 +1,7 @@
 from .. import Object
 from .vbox_textures import *
+import math
+from ...logger import logger
 
 class VBox(Object):
 	def __init__(self, *children, bindings=[], **modifiers):
@@ -8,7 +10,16 @@ class VBox(Object):
 		# Init border texture
 		self.border_style = self.get_modifier("border_style", "_default")
 		self.border_texture = vbox_border_textures.get(self.border_style)
-        
+
+		# Init layout
+		self.padding = self.get_modifier("padding", "0")
+		self.padding_left = int(self.get_modifier("padding_left", self.padding)) 
+		self.padding_right = int(self.get_modifier("padding_right", self.padding))
+		self.padding_top = int(self.get_modifier("padding_top", self.padding))
+		self.padding_bottom = int(self.get_modifier("padding_bottom", self.padding))
+		
+		self.spacing = int(self.get_modifier("spacing", 0))
+
 	def on_focus(self, key):
 		pass
 
@@ -37,15 +48,17 @@ class VBox(Object):
 
 		frame = top + "\n" + middle + bottom
 
-		# Add child objects
-
+		# Add child ojects
+		num_of_children = len(self.children)
+		total_height = height - self.padding_top - self.padding_bottom
+		height_per_child = math.floor((total_height - min(self.spacing * num_of_children, total_height)) / num_of_children) 
+		y = self.padding_top
 		for child in self.children:
-			x = 1
-			y = 1
-			width = width - 2
-			height = 1
+			x = self.padding_left
+			width = width - self.padding_left - self.padding_right
+			height = height_per_child
 			child_frame = child.render(width, height)
 			frame = self.append_child_frame(frame, child_frame, x, y)
-		
+			y += height + self.spacing
 
 		return frame

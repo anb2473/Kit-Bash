@@ -1,4 +1,4 @@
-from KiTUI import App, VBox
+from KiTUI import App, VBox, Label
 import curses
 
 class MyApp(App):
@@ -7,7 +7,15 @@ class MyApp(App):
 
     def compose(self):
         return VBox(
-		border_style="solid"           
+			Label(content="Hello World", bindings=[]),
+			VBox(
+				Label(content="Inner VBOX", binding=[]),
+				bindings=[],
+				padding="3",
+			),
+			bindings=[],
+			border_style="none",           
+			padding="5"
         )
 
 def main(stdscr):
