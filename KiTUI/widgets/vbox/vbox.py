@@ -30,8 +30,8 @@ class VBox(Object):
 			rel_y = y + i
 			if 0 <= rel_y < len(frame): # ensure y in bounds
 				row = frame_lines[rel_y]
-				new_row = row[:x] + line + row[(x + len(line) - 1):]
-				frame_lines[rel_y] = new_row[:len(row)] # clip to ensure line remains in bounds
+				new_row = row[:x] + line + row[(x + len(line)):]
+				frame_lines[rel_y] = new_row
 		return "\n".join(frame_lines)
 
 	def render(self, width, height):

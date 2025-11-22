@@ -14,7 +14,7 @@ class MyApp(App):
 				padding="3",
 			),
 			bindings=[],
-			border_style="none",           
+			border_style="double",           
 			padding="5"
         )
 
